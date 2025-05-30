@@ -84,20 +84,25 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           );
           return db.query(sqlArticles);
         })
-        .then(() => {
+        .then((articlesInsert) => {
+          const lookUpObj = createLookUpObject(
+            articlesInsert.rows,
+            "title",
+            "article_id"
+          );
           const commentsArray = commentData.map(
-            ({ body, votes = 0, author, users, created_at }) => {
+            ({ body, votes = 0, author, article_id, users, created_at }) => {
               return [
+                lookUpObj[article_id],
                 body,
                 votes,
                 author,
-                users,
                 convertTimestampToDate(created_at).created_at,
               ];
             }
           );
           const sqlComments = format(
-            `INSERT INTO comments(body, votes, author, article_id, created_at) VALUES %L RETURNING *`,
+            `INSERT INTO comments(article_id, body, votes, author, created_at) VALUES %L RETURNING *`,
             commentsArray
           );
           return db.query(sqlComments);
