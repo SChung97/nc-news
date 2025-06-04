@@ -26,7 +26,7 @@ describe("GET /api", () => {
 });
 
 describe("GET /api/topics", () => {
-  test("200: Responds with an array of topic objects with slug and description properties", () => {
+  test("200: Responds with an object containing a topics key and an array of topic objects as its value", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -37,6 +37,28 @@ describe("GET /api/topics", () => {
           expect(typeof topic.description).toBe("string");
         });
         expect(topics.length).not.toBe(0);
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: Responds with an object containing an articles key and an array of article objects as its value", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        articles.forEach((article) => {
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.comment_count).toBe("number");
+          expect(article.property).not.toBe(body);
+        });
+        expect(articles.length).not.toBe(0);
       });
   });
 });
