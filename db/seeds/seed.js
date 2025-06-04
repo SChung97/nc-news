@@ -26,7 +26,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         })
         .then(() => {
           return db.query(
-            `CREATE TABLE articles(article_id SERIAL PRIMARY KEY NOT NULL, title VARCHAR(60) NOT NULL, topic VARCHAR(70) NOT NULL REFERENCES topics(slug), author VARCHAR(60) NOT NULL REFERENCES users(username), body TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, votes INT DEFAULT 0, article_img_url VARCHAR(1000))`
+            `CREATE TABLE articles(article_id SERIAL PRIMARY KEY NOT NULL, title VARCHAR(100) NOT NULL, topic VARCHAR(70) NOT NULL REFERENCES topics(slug), author VARCHAR(60) NOT NULL REFERENCES users(username), body TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, votes INT DEFAULT 0, article_img_url VARCHAR(1000))`
           );
         })
         .then(() => {
@@ -64,7 +64,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
               author,
               body,
               created_at,
-              votes = 0,
+              votes,
               article_img_url,
             }) => {
               return [
@@ -84,27 +84,26 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           );
           return db.query(sqlArticles);
         })
-        .then((articlesInsert) => {
-          const lookUpObj = createLookUpObject(
-            articlesInsert.rows,
-            "title",
-            "article_id"
-          );
+        .then(({ rows }) => {
+          const lookUpObj = createLookUpObject(rows, "title", "article_id");
+
           const commentsArray = commentData.map(
-            ({ body, votes = 0, author, article_id, users, created_at }) => {
+            ({ body, votes, author, article_title, created_at }) => {
               return [
-                lookUpObj[article_id],
+                lookUpObj[article_title],
                 body,
                 votes,
                 author,
-                convertTimestampToDate(created_at).created_at,
+                convertTimestampToDate({ created_at }).created_at,
               ];
             }
           );
+          console.log(commentsArray);
           const sqlComments = format(
             `INSERT INTO comments(article_id, body, votes, author, created_at) VALUES %L RETURNING *`,
             commentsArray
           );
+          console.log(sqlComments);
           return db.query(sqlComments);
         });
     });
@@ -113,4 +112,4 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
 //<< write your first query in here.
 
 module.exports = seed;
-//For this task you should create tables for topics, users, articles, and comments. Make sure to consider the order in which you create your tables, and make sure this file succeeds if you run it more than once. You should think about whether you require any constraints on your table columns (e.g. 'NOT NULL'), and make sure each one is given a relevant data type. You can explore the Postgres docs on data types. There is also a nice summary on Geeks for Geeks.
+//For this task you should create tables for topics, users, articles, and comments. Make sure to consider the order in which you create your tapsqlbles, and make sure this file succeeds if you run it more than once. You should think about whether you require any constraints on your table columns (e.g. 'NOT NULL'), and make sure each one is given a relevant data type. You can explore the Postgres docs on data types. There is also a nice summary on Geeks for Geeks.
