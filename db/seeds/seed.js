@@ -98,12 +98,12 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
               ];
             }
           );
-          console.log(commentsArray);
+
           const sqlComments = format(
             `INSERT INTO comments(article_id, body, votes, author, created_at) VALUES %L RETURNING *`,
             commentsArray
           );
-          console.log(sqlComments);
+
           return db.query(sqlComments);
         });
     });

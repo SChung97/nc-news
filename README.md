@@ -5,4 +5,4 @@ Instructions for accessing the required environment variables locally after init
 2- Create two .env files named: .env.test and .env.development
 3- Within each .env file add PGDATABASE = example_database_name to connect to the corresponding database
 
-eg/ within .env.test: PGDATABASE = database_test
+eg/ within .env.test: PGDATABASE=database_test
