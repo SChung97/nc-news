@@ -4,6 +4,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
+
 /* Set up your test imports here */
 
 /* Set up your beforeEach & afterAll functions here */
@@ -59,6 +60,23 @@ describe("GET /api/articles", () => {
           expect(article.property).not.toBe(body);
         });
         expect(articles.length).not.toBe(0);
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: Responds with an object containing an articles key and an array of user objects as its value", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        users.forEach((user) => {
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
+        expect(users.length).not.toBe(0);
       });
   });
 });
