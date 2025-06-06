@@ -51,6 +51,23 @@
       }
     }
   },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a new comment to an article",
+    "request body": {
+      "username": "string",
+      "body": "string"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 5,
+        "votes": 0,
+        "created_at": "2023-05-06 12:06:00",
+        "author": "newUser",
+        "body": "New comment",
+        "article_id": 10
+      }
+    }
+  },
   "GET /api/users": {
     "description": "serves an array of all users",
     "exampleResponse": {

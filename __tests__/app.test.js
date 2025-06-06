@@ -121,6 +121,36 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Responds with a newly posted comment", () => {
+    const articleId = 3;
+    const newComment = {
+      username: "rogersop",
+      body: "This is a new comment",
+    };
+    return request(app)
+      .post(`/api/articles/${articleId}/comments`)
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const {
+          comment_id,
+          votes,
+          created_at,
+          author,
+          body: new_comment_body,
+          article_id,
+        } = body.comment;
+
+        expect(typeof comment_id).toBe("number");
+        expect(typeof votes).toBe("number");
+        expect(typeof created_at).toBe("string");
+        expect(typeof author).toBe("string");
+        expect(typeof new_comment_body).toBe("string");
+        expect(article_id).toBe(3);
+      });
+  });
+});
 describe("GET /api/users", () => {
   test("200: Responds with an object containing an articles key and an array of user objects as its value", () => {
     return request(app)
@@ -150,6 +180,14 @@ describe("Postgres errors", () => {
 });
 
 describe("Custom errors", () => {
+  test('404: Responds with "path not found" when path does not exist', () => {
+    return request(app)
+      .get("/api/nonexistent-path")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - path not found");
+      });
+  });
   test("404: Responds with 'not found' when article_id is an invalid number", () => {
     const invalidNumber = 707;
     return request(app)

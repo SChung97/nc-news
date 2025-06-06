@@ -1,9 +1,11 @@
-const { fetchCommentsByArticle } = require("../models/comments.models");
+const {
+  fetchCommentsByArticle,
+  insertComment,
+} = require("../models/comments.models");
 
 const getCommentsByArticle = (request, response, next) => {
   const { article_id } = request.params;
-  console.log(request);
-  console.log("hello from comments controller");
+  console.log("hello from comments controller", article_id);
   return fetchCommentsByArticle(article_id)
     .then((comments) => {
       response.status(200).send({ comments });
@@ -12,4 +14,14 @@ const getCommentsByArticle = (request, response, next) => {
       next(err);
     });
 };
-module.exports = { getCommentsByArticle };
+
+const postNewComment = (request, response, next) => {
+  const { article_id } = request.params;
+  const { username, body } = request.body;
+  console.log("hello from comments controller");
+  insertComment(article_id, username, body).then((comment) => {
+    response.status(201).send({ comment });
+  });
+};
+
+module.exports = { getCommentsByArticle, postNewComment };
