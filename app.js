@@ -2,6 +2,7 @@ const express = require("express");
 const { getEndPointsJSON } = require("./controllers/api.controller");
 const { getTopics } = require("./controllers/topics.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+const { getCommentsByArticle } = require("./controllers/comments.controllers");
 const {
   getArticles,
   getArticleById,
@@ -20,7 +21,7 @@ app.get("/api", getEndPointsJSON);
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
-//app.get("/api/articles/article_id/comments");
+app.get("/api/articles/:article_id/comments", getCommentsByArticle);
 app.get("/api/users", getUsers);
 
 app.use(handlePostgresErrors);

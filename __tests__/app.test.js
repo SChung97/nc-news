@@ -5,9 +5,6 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
 
-/* Set up your test imports here */
-
-/* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
   return seed(data);
 });
@@ -94,6 +91,35 @@ describe("articles", () => {
     });
   });
 });
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Responds with an object containing a key of comments and an array of comments for the given article_id as its value", () => {
+    return request(app)
+      .get(`/api/articles/1/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+          expect(comment.article_id).toBe(1);
+        });
+        expect(comments.length).not.toBe(0);
+      });
+  });
+  test("200: Responds with an object containing a key of comments and an empty array of comments as its value if any given article has no comments", () => {
+    return request(app)
+      .get(`/api/articles/8/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments.length).toBe(0);
+      });
+  });
+});
 
 describe("GET /api/users", () => {
   test("200: Responds with an object containing an articles key and an array of user objects as its value", () => {
@@ -112,26 +138,25 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("Error handling", () => {
-  describe("Postgres errors", () => {
-    test("400: Responds with 'bad request' when article_id is not a number", () => {
-      return request(app)
-        .get("/api/articles/notANumber")
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Error - bad request");
-        });
-    });
+describe("Postgres errors", () => {
+  test("400: Responds with 'bad request' when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/notANumber")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - bad request");
+      });
   });
-  describe("Custom errors", () => {
-    test("404: Responds with 'not found' when article_id is an invalid number", () => {
-      const invalidNumber = 707;
-      return request(app)
-        .get(`/api/articles/${invalidNumber}`)
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Error - article not found");
-        });
-    });
+});
+
+describe("Custom errors", () => {
+  test("404: Responds with 'not found' when article_id is an invalid number", () => {
+    const invalidNumber = 707;
+    return request(app)
+      .get(`/api/articles/${invalidNumber}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - article not found");
+      });
   });
 });

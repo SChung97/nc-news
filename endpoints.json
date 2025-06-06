@@ -4,14 +4,12 @@
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
-    "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all articles sorted by date in descending order",
-    "queries": [],
     "exampleResponse": {
       "articles": [
         {
@@ -27,7 +25,6 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves a single article object",
-    "queries": [],
     "exampleResponse": {
       "article": {
         "author": "icellusedkars",
@@ -43,7 +40,6 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an object with the key of comments and the value of an array of comments ordered by most recent for given article_id",
-    "queries": [],
     "exampleResponse": {
       "comments": {
         "comment_id": 1,
