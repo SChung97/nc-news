@@ -355,7 +355,40 @@ describe("Custom errors", () => {
         expect(body.msg).toBe("Error - article not found");
       });
   });
+  test('POST 400: Responds with "bad request" if username is missing (empty string) or not a string', () => {
+    const articleId = 1;
+    const attemptedComment = [
+      { username: "", body: "comment" },
+      { username: 756, body: "comment" },
+    ];
 
+    const attemptPromises = attemptedComment.map((comment) => {
+      return request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(comment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request - username field cannot be empty");
+          return attemptPromises;
+        });
+    });
+  });
+  test('POST 400: Responds with "bad request" if body is missing (empty string) or not a string', () => {
+    const articleId = 1;
+    const attemptedComment = [
+      { username: "butter_bridge", body: "" },
+      { username: "butter_bridge", body: 43656 },
+    ];
+    const attemptPromises = attemptedComment.map((comment) => {
+      return request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(comment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request - body field cannot be empty");
+        });
+    });
+  });
   test('404: Responds with "not found" when the comment doesn\'t exist', () => {
     const invalidComment = 20;
     return request(app)

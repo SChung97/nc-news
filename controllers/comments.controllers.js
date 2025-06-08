@@ -1,3 +1,4 @@
+const { string } = require("pg-format");
 const {
   fetchCommentsByArticle,
   insertComment,
@@ -21,6 +22,18 @@ const postNewComment = (request, response, next) => {
   const { article_id } = request.params;
   const { username, body } = request.body;
   console.log("hello from comments controller", article_id);
+  if (!username || typeof username !== "string") {
+    return next({
+      status: 400,
+      msg: "Bad request - username field cannot be empty",
+    });
+  }
+  if (!body || typeof body !== "string") {
+    return next({
+      status: 400,
+      msg: "Bad request - body field cannot be empty",
+    });
+  }
   insertComment(article_id, username, body)
     .then((comment) => {
       response.status(201).send({ comment });
