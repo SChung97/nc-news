@@ -28,4 +28,21 @@ const insertComment = (article_id, username, body) => {
     });
 };
 
-module.exports = { fetchCommentsByArticle, insertComment };
+const removeCommentById = (comment_id) => {
+  console.log("hello from comments model");
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [
+      comment_id,
+    ])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Error - comment not found",
+        });
+      }
+      return;
+    });
+};
+
+module.exports = { fetchCommentsByArticle, insertComment, removeCommentById };

@@ -182,6 +182,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
 describe("GET /api/users", () => {
   test("200: Responds with an object containing an articles key and an array of user objects as its value", () => {
     return request(app)
@@ -195,6 +196,19 @@ describe("GET /api/users", () => {
           expect(typeof user.avatar_url).toBe("string");
         });
         expect(users.length).not.toBe(0);
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responds with a deleted comment by comment id", () => {
+    const commentToDelete = 16;
+    return request(app)
+      .delete(`/api/comments/${commentToDelete}`)
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+        expect(response.text).toBe("");
       });
   });
 });
@@ -226,6 +240,22 @@ describe("Custom errors", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Error - article not found");
+      });
+  });
+  test('400: Responds with "bad request" when comment_id is an invalid number', () => {
+    return request(app)
+      .delete("/api/comments/not_a_num")
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - bad request");
+      });
+  });
+  test('404: Responds with "not found" when there are no comments to delete', () => {
+    const invalidComment = 20;
+    return request(app)
+      .delete(`/api/comments/${invalidComment}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - comment not found");
       });
   });
 });

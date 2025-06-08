@@ -32,13 +32,11 @@ const fetchArticleById = (id) => {
 
 const updateArticleVotes = (article_id, inc_votes) => {
   console.log("hello from articles model");
-  return db
-    .query(
-      `UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *`,
-      [article_id, inc_votes]
-    )
-    .then(({ rows }) => {
-      return rows[0];
-    });
+  return db.query(
+    `UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *`,
+    [article_id, inc_votes]
+  ).then(({rows}) => {
+    return rows[0]
+  });
 };
 module.exports = { fetchArticles, fetchArticleById, updateArticleVotes };
