@@ -1,6 +1,8 @@
 handlePostgresErrors = (err, request, response, next) => {
   if (err.code === "22P02") {
     response.status(400).send({ msg: "Error - bad request" });
+  } else if (err.code === "23503") {
+    response.status(404).send({ msg: "Error - Article/user does not exist" });
   } else {
     next(err);
   }

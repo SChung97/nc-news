@@ -263,6 +263,48 @@ describe("Postgres errors", () => {
         expect(body.msg).toBe("Error - bad request");
       });
   });
+  test('POST 400: Responds with "bad request" when article_id within /api/articles/:article_id/comments path is not a number', () => {
+    const nonNumberId = "not_a_num";
+    const attemptedComment = {
+      username: "butter_bridge",
+      body: "Test comment",
+    };
+    return request(app)
+      .post(`/api/articles/${nonNumberId}/comments`)
+      .send(attemptedComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - bad request");
+      });
+  });
+  test('POST 404: Responds with "article not found" when article number does not exist in the database', () => {
+    const numNotInDb = 864;
+    const attemptedComment = {
+      username: "butter_bridge",
+      body: "attempted comment",
+    };
+    return request(app)
+      .post(`/api/articles/${numNotInDb}/comments`)
+      .send(attemptedComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - Article/user does not exist");
+      });
+  });
+  test('POST 404: Responds with "user not found" when username does not exist', () => {
+    const articleId = 1;
+    const attemptedComment = {
+      username: "bad_user",
+      body: "attempted comment",
+    };
+    return request(app)
+      .post(`/api/articles/${articleId}/comments`)
+      .send(attemptedComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - Article/user does not exist");
+      });
+  });
   /* test('400: Responds with "bad request" when request body of inc_votes is missing', () => {
     const articleToUpdate = 1;
     const votesBody = {};
