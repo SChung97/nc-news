@@ -93,7 +93,20 @@ describe("articles", () => {
 });
 
 describe("PATCH /api/articles/:article_id", () => {
-  test("200: Responds with an updated article object with the votes modified", () => {
+  test("200: Responds with an unmodified article object when it has 0 votes", () => {
+    const articleId = 1;
+    const incVotes = 0;
+    const body = { inc_votes: incVotes };
+    return request(app)
+      .patch(`/api/articles/${articleId}`)
+      .send(body)
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.votes).toBe(100);
+      });
+  });
+  test("200: Responds with an updated article object with the votes count increased", () => {
     const articleId = 1;
     const newVotes = { inc_votes: 2 };
     return request(app)
@@ -118,6 +131,34 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(typeof topic).toBe("string");
         expect(typeof created_at).toBe("string");
         expect(votes).toBe(102);
+        expect(typeof article_img_url).toBe("string");
+      });
+  });
+  test("200: Responds with an updated article objext with the votes count decreased", () => {
+    const articleId = 1;
+    const newVotes = { inc_votes: -7 };
+    return request(app)
+      .patch(`/api/articles/${articleId}`)
+      .send(newVotes)
+      .expect(200)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body_contents,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article;
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(article_id).toBe(1);
+        expect(typeof article_body_contents).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(votes).toBe(93);
         expect(typeof article_img_url).toBe("string");
       });
   });
@@ -222,6 +263,36 @@ describe("Postgres errors", () => {
         expect(body.msg).toBe("Error - bad request");
       });
   });
+  /* test('400: Responds with "bad request" when request body of inc_votes is missing', () => {
+    const articleToUpdate = 1;
+    const votesBody = {};
+    return request(app)
+      .patch(`/api/articles/${articleToUpdate}`)
+      .send(votesBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request - votes field must not be empty");
+      });
+  }); */
+  test('400: Responds with "bad request" when the value of inc_votes is not a number', () => {
+    const articleToUpdate = 1;
+    const newVote = "not_a_num";
+    const votesBody = { inc_votes: newVote };
+    return request(app)
+      .patch(`/api/articles/${articleToUpdate}`)
+      .send(votesBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request - votes must be a number");
+      });
+  });
+  test('400: Responds with "bad request" when comment_id is not a number', () => {
+    return request(app)
+      .delete("/api/comments/not_a_num")
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - bad request");
+      });
+  });
 });
 
 describe("Custom errors", () => {
@@ -242,14 +313,8 @@ describe("Custom errors", () => {
         expect(body.msg).toBe("Error - article not found");
       });
   });
-  test('400: Responds with "bad request" when comment_id is an invalid number', () => {
-    return request(app)
-      .delete("/api/comments/not_a_num")
-      .then(({ body }) => {
-        expect(body.msg).toBe("Error - bad request");
-      });
-  });
-  test('404: Responds with "not found" when there are no comments to delete', () => {
+
+  test('404: Responds with "not found" when the comment doesn\'t exist', () => {
     const invalidComment = 20;
     return request(app)
       .delete(`/api/comments/${invalidComment}`)
