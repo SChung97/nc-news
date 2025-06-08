@@ -1,4 +1,6 @@
 const db = require("../db/connection");
+const { fetchArticleById } = require("./articles.models");
+const { fetchSingleUser } = require("../models/users.models");
 
 const fetchCommentsByArticle = (article_id) => {
   console.log("hello from comments model");
@@ -13,8 +15,8 @@ const fetchCommentsByArticle = (article_id) => {
 };
 
 const insertComment = (article_id, username, body) => {
-  
   console.log("hello from comments model");
+
   return db
     .query(
       `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *`,

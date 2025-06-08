@@ -1,6 +1,7 @@
 const {
   fetchArticles,
   fetchArticleById,
+  updateArticleVotes,
 } = require("../models/articles.models");
 
 const getArticles = (request, response, next) => {
@@ -26,6 +27,17 @@ const getArticleById = (request, response, next) => {
     });
 };
 
+const patchVotesByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  console.log("hello from articles controller", request.params);
+  updateArticleVotes(article_id, inc_votes)
+    .then((article) => {
+      response.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
-
-module.exports = { getArticles, getArticleById };
+module.exports = { getArticles, getArticleById, patchVotesByArticleId };

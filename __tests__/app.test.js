@@ -91,6 +91,37 @@ describe("articles", () => {
     });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Responds with an updated article object with the votes modified", () => {
+    const articleId = 1;
+    const newVotes = { inc_votes: 2 };
+    return request(app)
+      .patch(`/api/articles/${articleId}`)
+      .send(newVotes)
+      .expect(200)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body_contents,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article;
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(article_id).toBe(1);
+        expect(typeof article_body_contents).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(votes).toBe(102);
+        expect(typeof article_img_url).toBe("string");
+      });
+  });
+});
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Responds with an object containing a key of comments and an array of comments for the given article_id as its value", () => {
     return request(app)
