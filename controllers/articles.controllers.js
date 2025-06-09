@@ -2,6 +2,7 @@ const {
   fetchArticles,
   fetchArticleById,
   updateArticleVotes,
+  checkTopicExists,
 } = require("../models/articles.models");
 
 const getArticles = (request, response, next) => {
@@ -22,9 +23,20 @@ const getArticles = (request, response, next) => {
   if (!acceptableOrder.includes(order.toLowerCase())) {
     return next({ status: 400, msg: "Bad request - Invalid order query" });
   }
+
   console.log("hello from articles controller");
-  fetchArticles(sort_by, order, topic)
-    .then((articles) => {
+
+  const promises = [fetchArticles(sort_by, order.toLowerCase(), topic)];
+  if (topic) {
+    promises.push(checkTopicExists(topic));
+  }
+  Promise.all(promises)
+    .then((results) => {
+      const articles = results[0];
+      let topicExists = true;
+      if (topic) {
+        topicExists = results[1];
+      }
       response.status(200).send({ articles });
     })
     .catch((err) => {

@@ -21,7 +21,7 @@
       "comment_count"
     ],
     "defaultSort": "created_at",
-    "defaultOrder": "descending",
+    "defaultOrder": "desc",
     "exampleResponse": {
       "articles": [
         {
@@ -45,6 +45,10 @@
           "comment_count": 0
         }
       ]
+    },
+    "errorResponses": {
+      "400 Bad request": "Triggered when sort and/or order queries are invalid",
+      "404 Not found": "Triggered when topic is not found"
     }
   },
 

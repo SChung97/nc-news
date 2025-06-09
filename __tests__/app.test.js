@@ -200,35 +200,265 @@ describe("articles", () => {
           }
         });
     });
-  });
-  describe("GET /api/articles/:article_id", () => {
-    test("200: Responds with an object containing an article key and the value of an article object", () => {
-      const articleId = 9;
+    test("200: Responds with an array of articles filtered by topic in descending order of creation as default", () => {
       return request(app)
-        .get(`/api/articles/${articleId}`)
+        .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({ body }) => {
-          const {
-            author,
-            title,
-            article_id,
-            body: article_body_contents,
-            topic,
-            created_at,
-            votes,
-            article_img_url,
-          } = body.article;
-
-          expect(typeof author).toBe("string");
-          expect(typeof title).toBe("string");
-          expect(article_id).toBe(9);
-          expect(typeof article_body_contents).toBe("string");
-          expect(typeof topic).toBe("string");
-          expect(typeof created_at).toBe("string");
-          expect(typeof votes).toBe("number");
-          expect(typeof article_img_url).toBe("string");
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          expect(articles.length).toBeGreaterThan(0);
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentDate = articles[i].created_at;
+              const nextDate = articles[i + 1].created_at;
+              expect(
+                currentDate.localeCompare(nextDate)
+              ).toBeGreaterThanOrEqual(0);
+            }
+          }
         });
     });
+    test("200: Responds with an array of articles filtered by topic and sort by creation in ascending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=created_at&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentDate = articles[i].created_at;
+              const newDate = articles[i + 1].created_at;
+              expect(currentDate.localeCompare(newDate)).toBeLessThanOrEqual(0);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles filtered by topic and sorted by article_id in ascending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=article_id&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentId = articles[i].article_id;
+              const nextId = articles[i + 1].article_id;
+              expect(currentId).toBeLessThanOrEqual(nextId);
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by article_id in descending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=article_id&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentId = articles[i].article_id;
+              const nextId = articles[i + 1].article_id;
+              expect(currentId).toBeGreaterThanOrEqual(nextId);
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by title in ascending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=title&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentTitle = articles[i].title;
+              const nextTitle = articles[i + 1].title;
+              expect(currentTitle.localeCompare(nextTitle)).toBeLessThanOrEqual(
+                0
+              );
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by votes in ascending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=votes&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentVotes = articles[i].votes;
+              const nextVotes = articles[i + 1].votes;
+              expect(currentVotes).toBeLessThanOrEqual(nextVotes);
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by votes in descending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=votes&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentVotes = articles[i].votes;
+              const nextVotes = articles[i + 1].votes;
+              expect(currentVotes).toBeGreaterThanOrEqual(nextVotes);
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by comment_count in ascending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=comment_count&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentCount = articles[i].comment_count;
+              const nextCount = articles[i + 1].comment_count;
+              expect(currentCount).toBeLessThanOrEqual(nextCount);
+            }
+          }
+        });
+    });
+    test("200: Responds with a filtered topic sorted by comment_count in descending order", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=comment_count&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentCount = articles[i].comment_count;
+              const nextCount = articles[i + 1].comment_count;
+              expect(currentCount).toBeGreaterThanOrEqual(nextCount);
+            }
+          }
+        });
+    });
+  });
+});
+describe("GET /api/articles/:article_id", () => {
+  test("200: Responds with an object containing an article key and the value of an article object", () => {
+    const articleId = 9;
+    return request(app)
+      .get(`/api/articles/${articleId}`)
+      .expect(200)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body_contents,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article;
+
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(article_id).toBe(9);
+        expect(typeof article_body_contents).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(typeof votes).toBe("number");
+        expect(typeof article_img_url).toBe("string");
+      });
   });
 });
 

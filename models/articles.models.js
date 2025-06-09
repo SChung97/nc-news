@@ -72,4 +72,22 @@ const updateArticleVotes = (article_id, inc_votes) => {
       return rows[0];
     });
 };
-module.exports = { fetchArticles, fetchArticleById, updateArticleVotes };
+
+const checkTopicExists = (topic) => {
+  if (!topic) {
+    return Promise.resolve(true);
+  }
+  return db
+    .query(`SELECT * FROM topics WHERE slug = $1`, [topic])
+    .then(({ rows }) => {
+      if (rows.length > 0) {
+        return;
+      }
+    });
+};
+module.exports = {
+  fetchArticles,
+  fetchArticleById,
+  updateArticleVotes,
+  checkTopicExists,
+};
