@@ -5,8 +5,25 @@ const {
 } = require("../models/articles.models");
 
 const getArticles = (request, response, next) => {
+  const { sort_by = "created_at", order = "desc", topic } = request.query;
+  const acceptableQueries = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const acceptableOrder = ["asc", "desc"];
+  if (!acceptableQueries.includes(sort_by)) {
+    return next({ status: 400, msg: "Bad request - Invalid sort query" });
+  }
+  if (!acceptableOrder.includes(order.toLowerCase())) {
+    return next({ status: 400, msg: "Bad request - Invalid order query" });
+  }
   console.log("hello from articles controller");
-  fetchArticles()
+  fetchArticles(sort_by, order, topic)
     .then((articles) => {
       response.status(200).send({ articles });
     })

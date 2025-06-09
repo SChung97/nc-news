@@ -9,23 +9,45 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles sorted by date in descending order",
+    "description": "serves an array of all articles sorted by date in descending order as default but can be modified according to client preference",
+    "queries": ["sort_by", "order", "topic"],
+    "optionsToSortBy": [
+      "article_id",
+      "title",
+      "topic",
+      "author",
+      "created_at",
+      "votes",
+      "comment_count"
+    ],
+    "defaultSort": "created_at",
+    "defaultOrder": "descending",
     "exampleResponse": {
       "articles": [
         {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "created_at": "2018-05-30T15:59:13.341Z",
+          "article_id": 13,
+          "title": "Another article about Mitch",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "created_at": "2020-10-11 12:24:00",
           "votes": 0,
-          "comment_count": 6
+          "article_img_id": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 0
+        },
+        {
+          "article_id": 11,
+          "title": "Am I a cat?",
+          "topic": "mitch",
+          "author": "icellusedkars",
+          "created_at": "2020-01-15 22:21:00",
+          "votes": 0,
+          "article_img_id": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 0
         }
       ]
     }
   },
-  "GET /api/articles queries": {
-    "description": ""
-  },
+
   "GET /api/articles/:article_id": {
     "description": "serves a single article object",
     "exampleResponse": {

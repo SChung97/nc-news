@@ -41,7 +41,7 @@ describe("GET /api/topics", () => {
 
 describe("articles", () => {
   describe("GET /api/articles", () => {
-    test("200: Responds with an object containing an articles key and an array of article objects as its value", () => {
+    test("200: Responds with an object containing an articles key and an array of article objects as its value sorted in descending order by date", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -58,6 +58,146 @@ describe("articles", () => {
             expect(article.property).not.toBe(body);
           });
           expect(articles.length).not.toBe(0);
+        });
+    });
+    test("200: Responds with an array of articles sorted by created_at in ascending order", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentDate = articles[i].created_at;
+              const nextDate = articles[i + 1].created_at;
+              expect(currentDate.localeCompare(nextDate)).toBeLessThanOrEqual(
+                0
+              );
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by article_id in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentId = articles[i].article_id;
+              const nextId = articles[i + 1].article_id;
+              expect(currentId).toBeLessThanOrEqual(nextId);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by article_id in descending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentId = articles[i].article_id;
+              const nextId = articles[i + 1].article_id;
+              expect(currentId).toBeGreaterThanOrEqual(nextId);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by title in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentTitle = articles[i].title;
+              const nextTitle = articles[i + 1].title;
+              expect(currentTitle.localeCompare(nextTitle)).toBeLessThanOrEqual(
+                0
+              );
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by title in descending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentTitle = articles[i].title;
+              const nextTitle = articles[i + 1].title;
+              expect(
+                currentTitle.localeCompare(nextTitle)
+              ).toBeGreaterThanOrEqual(0);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by votes in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentVotes = articles[i].votes;
+              const nextVotes = articles[i + 1].votes;
+              expect(currentVotes).toBeLessThanOrEqual(nextVotes);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by votes in descending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentVotes = articles[i].votes;
+              const nextVotes = articles[i + 1].votes;
+              expect(currentVotes).toBeGreaterThanOrEqual(nextVotes);
+            }
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by comment count in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1);
+          for (let i = 0; i < articles.length - 1; i++) {
+            const currentCount = articles[i].comment_count;
+            const nextCount = articles[i].comment_count;
+            expect(currentCount).toBeLessThanOrEqual(nextCount);
+          }
+        });
+    });
+    test("200: Responds with an array of articles sorted by comment count in descending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentCount = articles[i].comment_count;
+              const nextCount = articles[i].comment_count;
+              expect(currentCount).toBeGreaterThanOrEqual(nextCount);
+            }
+          }
         });
     });
   });
@@ -134,7 +274,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(typeof article_img_url).toBe("string");
       });
   });
-  test("200: Responds with an updated article objext with the votes count decreased", () => {
+  test("200: Responds with an updated article object with the votes count decreased", () => {
     const articleId = 1;
     const newVotes = { inc_votes: -7 };
     return request(app)
@@ -398,5 +538,24 @@ describe("Custom errors", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Error - comment not found");
       });
+  });
+
+  describe("FEATURE REQUEST custom error handling", () => {
+    test('400: Responds with "bad request" when attempting to order by something that isn\'t "ascending" or "descending"', () => {
+      return request(app)
+        .get("/api/articles?order=order_not_valid")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request - Invalid order query");
+        });
+    });
+    test('400: Responds with "bad request" when attempting to sort by an invalid column in articles table', () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalid_column")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request - Invalid sort query");
+        });
+    });
   });
 });
