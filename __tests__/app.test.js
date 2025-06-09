@@ -305,7 +305,7 @@ describe("Postgres errors", () => {
         expect(body.msg).toBe("Error - Article/user does not exist");
       });
   });
-  /* test('400: Responds with "bad request" when request body of inc_votes is missing', () => {
+  test('400: Responds with "bad request" when request body of inc_votes is missing', () => {
     const articleToUpdate = 1;
     const votesBody = {};
     return request(app)
@@ -315,7 +315,7 @@ describe("Postgres errors", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request - votes field must not be empty");
       });
-  }); */
+  });
   test('400: Responds with "bad request" when the value of inc_votes is not a number', () => {
     const articleToUpdate = 1;
     const newVote = "not_a_num";
@@ -386,6 +386,7 @@ describe("Custom errors", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad request - body field cannot be empty");
+          return attemptPromises;
         });
     });
   });

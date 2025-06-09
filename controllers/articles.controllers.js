@@ -31,12 +31,12 @@ const patchVotesByArticleId = (request, response, next) => {
   const { article_id } = request.params;
   const { inc_votes } = request.body;
   console.log("hello from articles controller", request.params);
-  /* if ((inc_votes = {})) {
+  if (inc_votes === undefined) {
     return next({
       status: 400,
       msg: "Bad request - votes field must not be empty",
     });
-  } */
+  }
   if (typeof inc_votes !== "number") {
     return next({ status: 400, msg: "Bad request - votes must be a number" });
   }

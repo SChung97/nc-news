@@ -23,6 +23,9 @@
       ]
     }
   },
+  "GET /api/articles queries": {
+    "description": ""
+  },
   "GET /api/articles/:article_id": {
     "description": "serves a single article object",
     "exampleResponse": {
