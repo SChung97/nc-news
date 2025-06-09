@@ -177,11 +177,12 @@ describe("articles", () => {
         .expect(200)
         .then(({ body }) => {
           const articles = body.articles;
-          if (articles.length > 1);
-          for (let i = 0; i < articles.length - 1; i++) {
-            const currentCount = articles[i].comment_count;
-            const nextCount = articles[i].comment_count;
-            expect(currentCount).toBeLessThanOrEqual(nextCount);
+          if (articles.length > 1) {
+            for (let i = 0; i < articles.length - 1; i++) {
+              const currentCount = articles[i].comment_count;
+              const nextCount = articles[i + 1].comment_count;
+              expect(currentCount).toBeLessThanOrEqual(nextCount);
+            }
           }
         });
     });
@@ -194,7 +195,7 @@ describe("articles", () => {
           if (articles.length > 1) {
             for (let i = 0; i < articles.length - 1; i++) {
               const currentCount = articles[i].comment_count;
-              const nextCount = articles[i].comment_count;
+              const nextCount = articles[i + 1].comment_count;
               expect(currentCount).toBeGreaterThanOrEqual(nextCount);
             }
           }
