@@ -717,6 +717,15 @@ describe("Custom errors", () => {
         expect(body.msg).toBe("Error - path not found");
       });
   });
+  test('404: Responds with "not found" when a topic does not exist', () => {
+    const invalidTopic = "dogs";
+    return request(app)
+      .get(`/api/articles?topic=${invalidTopic}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - topic not found");
+      });
+  });
   test("404: Responds with 'not found' when article_id is an invalid number", () => {
     const invalidNumber = 707;
     return request(app)

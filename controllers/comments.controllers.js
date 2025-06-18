@@ -2,7 +2,7 @@ const { string } = require("pg-format");
 const {
   fetchCommentsByArticle,
   insertComment,
-  removeComment,
+
   removeCommentById,
 } = require("../models/comments.models");
 

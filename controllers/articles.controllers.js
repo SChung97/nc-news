@@ -2,8 +2,8 @@ const {
   fetchArticles,
   fetchArticleById,
   updateArticleVotes,
-  checkTopicExists,
 } = require("../models/articles.models");
+const { checkTopicExists } = require("../models/topics.models");
 
 const getArticles = (request, response, next) => {
   const { sort_by = "created_at", order = "desc", topic } = request.query;
