@@ -7,8 +7,35 @@
   </head>
   <body>
     <header>
-      <h1>NC News Server API Documentation</h1>
-      <p>This API is designed</p>
+      <h1>NC News API Documentation</h1>
+      <p>
+        This is a simple HTTP REST API designed to act as a news server, in
+        which clients are able to interact with. You can filter articles by
+        existing topics, sort them by: title, when they were published, upvotes
+        or comment count in ascending or descending order. Comments can be
+        retrieved on individual articles, new comments can be posted or deleted
+        by the registered user.
+      </p>
+      <p>Base URL: <a href="https://nc-news-zgkw.onrender.com/api"></a></p>
     </header>
+    <main>
+      <section>
+        <h2>Authentication</h2>
+        <p>
+          This API does not currently require authentication to access public
+          endpoints
+        </p>
+      </section>
+      <section>
+        <h3>Endpoints</h3>
+        <section><ul>GET /api/topics</ul>
+        <p>Search all topics available on the server here</p>
+</section>
+<section><ul>GET /api/articles</ul>
+  <p></p>
+</section>
+      </section>
+    </main>
+    <footer></footer>
   </body>
 </html>
