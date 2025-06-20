@@ -533,6 +533,36 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(typeof article_img_url).toBe("string");
       });
   });
+  test('200: Responds with an unchanged article when the request body has no "inc_votes" key', () => {
+    const articleId = 1;
+    const initialVotes = 100;
+    const emptyBody = {};
+
+    return request(app)
+      .patch(`/api/articles/${articleId}`)
+      .send(emptyBody)
+      .expect(200)
+      .then(({ body }) => {
+        const {
+          author,
+          title,
+          article_id,
+          body: article_body_contents,
+          topic,
+          created_at,
+          votes,
+          article_img_url,
+        } = body.article;
+        expect(typeof author).toBe("string");
+        expect(typeof title).toBe("string");
+        expect(article_id).toBe(1);
+        expect(typeof article_body_contents).toBe("string");
+        expect(typeof topic).toBe("string");
+        expect(typeof created_at).toBe("string");
+        expect(votes).toBe(100);
+        expect(typeof article_img_url).toBe("string");
+      });
+  });
 });
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Responds with an object containing a key of comments and an array of comments for the given article_id as its value", () => {
@@ -676,17 +706,7 @@ describe("Postgres errors", () => {
         expect(body.msg).toBe("Error - Article/user does not exist");
       });
   });
-  test('400: Responds with "bad request" when request body of inc_votes is missing', () => {
-    const articleToUpdate = 1;
-    const votesBody = {};
-    return request(app)
-      .patch(`/api/articles/${articleToUpdate}`)
-      .send(votesBody)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Bad request - votes field must not be empty");
-      });
-  });
+
   test('400: Responds with "bad request" when the value of inc_votes is not a number', () => {
     const articleToUpdate = 1;
     const newVote = "not_a_num";

@@ -61,10 +61,14 @@ const patchVotesByArticleId = (request, response, next) => {
   const { inc_votes } = request.body;
   console.log("hello from articles controller", request.params);
   if (inc_votes === undefined) {
-    return next({
-      status: 400,
-      msg: "Bad request - votes field must not be empty",
-    });
+    console.log("No inc_votes provided");
+    return fetchArticleById(article_id)
+      .then((article) => {
+        response.status(200).send({ article });
+      })
+      .catch((err) => {
+        next(err);
+      });
   }
   if (typeof inc_votes !== "number") {
     return next({ status: 400, msg: "Bad request - votes must be a number" });
