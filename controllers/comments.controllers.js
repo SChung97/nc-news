@@ -5,10 +5,22 @@ const {
 
   removeCommentById,
 } = require("../models/comments.models");
+const { fetchArticleById } = require("../models/articles.models");
 
 const getCommentsByArticle = (request, response, next) => {
   const { article_id } = request.params;
   console.log("hello from comments controller", article_id);
+  fetchArticleById(article_id)
+    .then(() => {
+      return fetchCommentsByArticle(article_id);
+    })
+    .then((comments) => {
+      response.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+
   return fetchCommentsByArticle(article_id)
     .then((comments) => {
       response.status(200).send({ comments });

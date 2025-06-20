@@ -559,7 +559,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(typeof article_body_contents).toBe("string");
         expect(typeof topic).toBe("string");
         expect(typeof created_at).toBe("string");
-        expect(votes).toBe(100);
+        expect(votes).toBe(initialVotes);
         expect(typeof article_img_url).toBe("string");
       });
   });
@@ -750,6 +750,15 @@ describe("Custom errors", () => {
     const invalidNumber = 707;
     return request(app)
       .get(`/api/articles/${invalidNumber}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Error - article not found");
+      });
+  });
+  test('404: Responds with "Error - article not found" when requesting comments for a valie id that doesn\'t exist', () => {
+    const nonExistingArticleId = 1834;
+    return request(app)
+      .get(`/api/articles/${nonExistingArticleId}/comments`)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Error - article not found");
