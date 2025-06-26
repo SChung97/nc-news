@@ -11,6 +11,9 @@ const fetchCommentsByArticle = (article_id) => {
     )
     .then(({ rows }) => {
       return rows;
+    }).catch((err) =>{
+      console.error('Error inserting comment')
+      throw err
     });
 };
 
