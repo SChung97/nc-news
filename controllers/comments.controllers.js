@@ -1,4 +1,4 @@
-const { string } = require("pg-format");
+
 const {
   fetchCommentsByArticle,
   insertComment,
@@ -9,7 +9,6 @@ const { fetchArticleById } = require("../models/articles.models");
 
 const getCommentsByArticle = (request, response, next) => {
   const { article_id } = request.params;
-  console.log("hello from comments controller", article_id);
   fetchArticleById(article_id)
     .then(() => {
       return fetchCommentsByArticle(article_id);
@@ -25,7 +24,6 @@ const getCommentsByArticle = (request, response, next) => {
 const postNewComment = (request, response, next) => {
   const { article_id } = request.params;
   const { username, body } = request.body;
-  console.log("hello from comments controller", article_id);
   if (!username || typeof username !== "string") {
     return next({
       status: 400,
@@ -49,7 +47,6 @@ const postNewComment = (request, response, next) => {
 
 const deleteCommentById = (request, response, next) => {
   const { comment_id } = request.params;
-  console.log("hello from comments controller", comment_id);
   removeCommentById(comment_id)
     .then(() => {
       response.status(204).send();

@@ -24,7 +24,6 @@ const getArticles = (request, response, next) => {
     return next({ status: 400, msg: "Bad request - Invalid order query" });
   }
 
-  console.log("hello from articles controller");
 
   const promises = [fetchArticles(sort_by, order.toLowerCase(), topic)];
   if (topic) {
@@ -46,7 +45,6 @@ const getArticles = (request, response, next) => {
 
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
-  console.log("hello from articles controller", article_id);
   fetchArticleById(article_id)
     .then((article) => {
       response.status(200).send({ article });
@@ -59,7 +57,6 @@ const getArticleById = (request, response, next) => {
 const patchVotesByArticleId = (request, response, next) => {
   const { article_id } = request.params;
   const { inc_votes } = request.body;
-  console.log("hello from articles controller", request.params);
   if (inc_votes === undefined) {
     console.log("No inc_votes provided");
     return fetchArticleById(article_id)

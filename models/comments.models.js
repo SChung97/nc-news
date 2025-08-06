@@ -1,9 +1,7 @@
 const db = require("../db/connection");
-const { fetchArticleById } = require("./articles.models");
-const { fetchSingleUser } = require("../models/users.models");
+
 
 const fetchCommentsByArticle = (article_id) => {
-  console.log("hello from comments model");
   return db
     .query(
       `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
@@ -18,7 +16,6 @@ const fetchCommentsByArticle = (article_id) => {
 };
 
 const insertComment = (article_id, username, body) => {
-  console.log("hello from comments model");
 
   return db
     .query(
@@ -32,7 +29,6 @@ const insertComment = (article_id, username, body) => {
 };
 
 const removeCommentById = (comment_id) => {
-  console.log("hello from comments model");
   return db
     .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [
       comment_id,
