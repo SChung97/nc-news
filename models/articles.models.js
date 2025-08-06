@@ -1,7 +1,6 @@
 const db = require("../db/connection");
 
 const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
-  console.log("hello from articles model");
   const acceptableSort = [
     "author",
     "title",
@@ -37,13 +36,11 @@ const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
       return rows;
     })
     .catch((err) => {
-      console.error("database query error", err);
       return Promise.reject(err);
     });
 };
 
 const fetchArticleById = (id) => {
-  console.log("hello from articles model");
   return db
     .query(
       `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INT) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id, articles.author, articles.title, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url`,
@@ -62,7 +59,6 @@ const fetchArticleById = (id) => {
 };
 
 const updateArticleVotes = (article_id, inc_votes) => {
-  console.log("hello from articles model");
   return db
     .query(
       `UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *`,
