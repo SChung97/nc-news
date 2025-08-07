@@ -1,7 +1,6 @@
 const { fetchTopics } = require("../models/topics.models");
 
 const getTopics = (request, response, next) => {
-  console.log("hello from topics controller");
 
   return fetchTopics()
     .then((topics) => {

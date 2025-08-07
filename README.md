@@ -1,22 +1,90 @@
-# NC News
 
-Visit the hosted version of NC News here: https://nc-news-zgkw.onrender.com
+# NC News - Backend
 
-NC News is a new app designed to emulate a Reddit adjacent platform. This app makes use of PostgreSQL to create tables, seed our data and serve it to construct a RESTful server using Node.js with Express.js. Express.js handles any requests, interacts with the seeded database and performs complex queries. Jest and Supertest are used to handle our errors
+A RESTful API for a news app designed to emulate a Reddit adjacent platform. Users can:
 
-Getting started:
-1 - Start by cloning the prject from GitHub: https://github.com/SChung97/nc-news
-2 - Ensure you have the minimum versions of Node.js and PostgreSQL are installed
-3 - Install dependencies using 'npm install'
-4 - Create your local development and test databases
+- View a list of all articles that can be sorted by date published, number of comments, vote count and/or ordered by descending or ascending
+- Filter articles by topic
+- Upvote/downvote articles
+- Leave comments when logged in
+- Delete reviews they've made
 
-Instructions for accessing the required environment variables locally after initial cloning of nc-news project are here:
-1 - Create two .env files named: .env.test and .env.development
-2 - Within each .env file add PGDATABASE = example_database_name to connect to the corresponding database
-3 - Check .gitignore folder to see if .env.\* are included
+🟢 Live API - https://nc-news-zgkw.onrender.com/api
 
-eg / within .env.test: PGDATABASE=database_test
+## Tech Stack
 
-Populate your local databases by running 'npm run seed'
-Run the project via 'npm start'
-Run tests using 'npm test'
+- Node.js
+- Express
+- PostgreSQL
+- Jest & Supertest
+- Jest-extended
+- Husky for Git hooks
+- CORS middleware for cross-origin requests
+- PG and PG-Format
+- Nodemon
+
+## Setup
+
+Please ensure that the minimum versions of Node.js and PostgreSQL have been installed. For the purposes of this 
+
+1. Clone repository:
+
+```bash
+git clone https://github.com/SChung97/nc-news
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Environment variables
+   Create the following .env files in the root of the project
+
+- .env.development
+- .env.test
+- .env.production
+
+- check .env.\* are included within the .gitignore files
+
+```bash
+# .env.development
+PGDATABASE=nc_news
+```
+
+```bash
+# .env.test
+PGDATABASE=nc_news_test
+```
+
+```bash
+# .env.production
+DATABASE_URL=your_production_database_url_here
+```
+
+4. Set up databases:
+
+```bash
+npm run setup-dbs
+```
+
+5. Seed databases
+
+- For development / testing:
+
+```bash
+npm run seed
+```
+
+- For production:
+
+```bash
+npm run seed-prod
+```
+
+6. Run tests:
+
+```bash
+npm test
+```
