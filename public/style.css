@@ -1,0 +1,18 @@
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.auth {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+.all-text {
+    margin: 50px;
+}
+
+.api-description {
+    padding-bottom: 15px;
+    padding-top: auto;
+}
+

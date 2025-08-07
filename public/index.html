@@ -2,10 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bigelow+Rules&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body>
+  <body class="all-text">
     <header>
       <h1>NC News API Documentation</h1>
       <p>
@@ -16,10 +23,10 @@
         retrieved on individual articles, new comments can be posted or deleted
         by the registered user.
       </p>
-      <p>Base URL: <a href="https://nc-news-zgkw.onrender.com/api"></a></p>
+      <hr>
     </header>
     <main>
-      <section>
+      <section class="auth">
         <h2>Authentication</h2>
         <p>
           This API does not currently require authentication to access public
@@ -29,96 +36,100 @@
 
       <h2>Endpoints</h2>
       <section>
-        <ul>
+        <h3>
           GET /api/topics
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a get request to this endpoint will return a list of all topics
           within the database
         </p>
       </section>
       <section>
-        <ul>
+        <h3>
           GET /api/articles
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a get request to this endpoint will return all articles,
           automatically sorted by date in descending order
         </p>
       </section>
       <section>
-        <ul>
+        <h3>
           GET /api/articles/:article_id
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a get request to this endpoint will return a single article
           corresponding to its id number
         </p>
-        <ul>
+        <h3>
           PATCH /api/articles/:article_id
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a patch request to this endpoint updates the votes on a single
           article corresponding to its article_id
         </p>
       </section>
       <section>
-        <ul>
+        <h3>
           GET /api/articles/:article_id/comments
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a get request to this endpoint will return all comments from a
           single article corresponding to its article_id
         </p>
-        <ul>
+        <h3>
           POST /api/articles/:article_id/comments
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Making a post request to this endpoint will post a new comment to a
           single article corresponding to its article_id
         </p>
       </section>
       <section>
-        <ul>
+        <h3>
           DELETE /api/comments/:comment_id
-          <p>
+        </h3>  
+          <p class="api-description">
             Delete request available on /api/comment/:comment_id endpoint. This
             request will delete the given comment by commment_id
           </p>
-        </ul>
       </section>
-      <section>
-        <ul>
+      <section class="users">
+        <h3>
           GET /api/users
-        </ul>
-        <p>Making a get request to this endpoint will return all users</p>
+        </h3>
+        <p class="api-description">Making a get request to this endpoint will return all users</p>
       </section>
-      <h2>Feature requests</h2>
+      <hr>
+      <h2 class="feat-req">Feature requests</h2>
       <section>
-        <ul>
+        <h3>
           GET /api/articles
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Make a feature request to this endpoint, users can sort articles by
           article_id, title, vote count, date of creation or comment count
           ordered by ascending or descending order (where articles are
           automatically sorted by date of creation in descending order)
         </p>
-        <p>
+        <p class="api-description">
           Make a feature request to this endpoint, articles can be filtered by
           the topic specified in the query
         </p>
       </section>
       <section>
-        <ul>
+        <h3>
           GET /api/articles/:article_id
-        </ul>
-        <p>
+        </h3>
+        <p class="api-description">
           Make a feature request to this end point, allows the user to view the
           comment count on single articles
         </p>
       </section>
     </main>
-    <footer></footer>
+    <hr>
+    <footer>
+      <p>© Northcoders</p>
+    </footer>
   </body>
 </html>
